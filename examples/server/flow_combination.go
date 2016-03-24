@@ -3,7 +3,7 @@ package main
 import (
 	"io"
 
-	examples "github.com/gengo/grpc-gateway/examples/examplepb"
+	examples "github.com/outself/grpc-gateway/examples/examplepb"
 	"golang.org/x/net/context"
 )
 

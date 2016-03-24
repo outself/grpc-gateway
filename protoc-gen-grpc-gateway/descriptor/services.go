@@ -4,12 +4,57 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gengo/grpc-gateway/protoc-gen-grpc-gateway/httprule"
-	options "github.com/gengo/grpc-gateway/third_party/googleapis/google/api"
+	"github.com/outself/grpc-gateway/protoc-gen-grpc-gateway/httprule"
+	options "github.com/outself/grpc-gateway/third_party/googleapis/google/api"
 	"github.com/golang/glog"
 	"github.com/golang/protobuf/proto"
 	descriptor "github.com/golang/protobuf/protoc-gen-go/descriptor"
+	pbdescriptor "github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
+
+func splitComments(comments string) (short, desc string) {
+	// print comments, but insert "//" before each newline.
+	for len(comments) > 0 {
+		if lineEnd := strings.Index(comments, "\n"); lineEnd >= 0 {
+			short = comments[:lineEnd] // includes newline
+			comments = comments[lineEnd+1:]
+			break
+		} else {
+			// actually this does not happen, because comments always end with
+			// newline, but just in case.
+			short = comments
+			comments = ""
+		}
+	}
+	short = strings.TrimSpace(short)
+	desc = strings.TrimSpace(comments)
+	return
+}
+
+func findLocationComments(s *pbdescriptor.SourceCodeInfo, path []int) string {
+	loc := findLocation(s, path)
+	if loc == nil {
+		return ""
+	}
+
+	return loc.GetLeadingComments()
+}
+
+func findLocation(s *pbdescriptor.SourceCodeInfo, path []int) *pbdescriptor.SourceCodeInfo_Location {
+Outer:
+	for _, l := range s.GetLocation() {
+		if len(path) != len(l.Path) {
+			continue
+		}
+		for i := range path {
+			if int32(path[i]) != l.Path[i] {
+				continue Outer
+			}
+		}
+		return l
+	}
+	return nil
+}
 
 // loadServices registers services and their methods from "targetFile" to "r".
 // It must be called after loadFile is called for all files so that loadServices
@@ -17,13 +62,14 @@ import (
 func (r *Registry) loadServices(file *File) error {
 	glog.V(1).Infof("Loading services from %s", file.GetName())
 	var svcs []*Service
-	for _, sd := range file.GetService() {
+	sourceCodeInfo := file.GetSourceCodeInfo()
+	for svcIndex, sd := range file.GetService() {
 		glog.V(2).Infof("Registering %s", sd.GetName())
 		svc := &Service{
 			File: file,
 			ServiceDescriptorProto: sd,
 		}
-		for _, md := range sd.GetMethod() {
+		for methodIndex, md := range sd.GetMethod() {
 			glog.V(2).Infof("Processing %s.%s", sd.GetName(), md.GetName())
 			opts, err := extractAPIOptions(md)
 			if err != nil {
@@ -34,7 +80,11 @@ func (r *Registry) loadServices(file *File) error {
 				glog.V(1).Infof("Skip non-target method: %s.%s", svc.GetName(), md.GetName())
 				continue
 			}
-			meth, err := r.newMethod(svc, md, opts)
+
+			sourceInfoPath := []int{6, svcIndex, 2, methodIndex}
+			comments := findLocationComments(sourceCodeInfo, sourceInfoPath)
+
+			meth, err := r.newMethod(svc, md, opts, comments)
 			if err != nil {
 				return err
 			}
@@ -50,7 +100,7 @@ func (r *Registry) loadServices(file *File) error {
 	return nil
 }
 
-func (r *Registry) newMethod(svc *Service, md *descriptor.MethodDescriptorProto, opts *options.HttpRule) (*Method, error) {
+func (r *Registry) newMethod(svc *Service, md *descriptor.MethodDescriptorProto, opts *options.HttpRule, comments string) (*Method, error) {
 	requestType, err := r.LookupMsg(svc.File.GetPackage(), md.GetInputType())
 	if err != nil {
 		return nil, err
@@ -64,6 +114,7 @@ func (r *Registry) newMethod(svc *Service, md *descriptor.MethodDescriptorProto,
 		MethodDescriptorProto: md,
 		RequestType:           requestType,
 		ResponseType:          responseType,
+		Comments:              comments,
 	}
 
 	newBinding := func(opts *options.HttpRule, idx int) (*Binding, error) {

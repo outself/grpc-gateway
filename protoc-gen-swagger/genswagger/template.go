@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/gengo/grpc-gateway/protoc-gen-grpc-gateway/descriptor"
+	"github.com/outself/grpc-gateway/protoc-gen-grpc-gateway/descriptor"
 	pbdescriptor "github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
 
@@ -307,7 +307,7 @@ func renderServices(services []*descriptor.Service, paths swaggerPathsObject, re
 	for _, svc := range services {
 		for _, meth := range svc.Methods {
 			if meth.GetClientStreaming() || meth.GetServerStreaming() {
-				return fmt.Errorf(`service uses streaming, which is not currently supported. Maybe you would like to implement it? It wouldn't be that hard and we don't bite. Why don't you send a pull request to https://github.com/gengo/grpc-gateway?`)
+				return fmt.Errorf(`service uses streaming, which is not currently supported. Maybe you would like to implement it? It wouldn't be that hard and we don't bite. Why don't you send a pull request to https://github.com/outself/grpc-gateway?`)
 			}
 			for _, b := range meth.Bindings {
 				// Iterate over all the swagger parameters
@@ -416,13 +416,14 @@ func renderServices(services []*descriptor.Service, paths swaggerPathsObject, re
 					pathItemObject = swaggerPathItemObject{}
 				}
 				operationObject := &swaggerOperationObject{
-					Summary:     fmt.Sprintf("%s.%s", svc.GetName(), meth.GetName()),
-					Tags:        []string{svc.GetName()},
-					OperationId: fmt.Sprintf("%s", meth.GetName()),
-					Parameters:  parameters,
+					Description: strings.TrimSpace(meth.Comments),
+					//Summary:     fmt.Sprintf("%s.%s", svc.GetName(), meth.GetName()),
+					Tags: []string{svc.GetName()},
+					//OperationId: fmt.Sprintf("%s", meth.GetName()),
+					Parameters: parameters,
 					Responses: swaggerResponsesObject{
 						"default": swaggerResponseObject{
-							Description: "Description",
+							Description: "OK",
 							Schema: swaggerSchemaObject{
 								Ref: fmt.Sprintf("#/definitions/%s", fullyQualifiedNameToSwaggerName(meth.ResponseType.FQMN(), reg)),
 							},

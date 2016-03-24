@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gengo/grpc-gateway/runtime"
+	"github.com/outself/grpc-gateway/runtime"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/metadata"
 )

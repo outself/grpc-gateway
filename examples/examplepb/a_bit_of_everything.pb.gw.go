@@ -14,9 +14,9 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/gengo/grpc-gateway/examples/sub"
-	"github.com/gengo/grpc-gateway/runtime"
-	"github.com/gengo/grpc-gateway/utilities"
+	"github.com/outself/grpc-gateway/examples/sub"
+	"github.com/outself/grpc-gateway/runtime"
+	"github.com/outself/grpc-gateway/utilities"
 	"github.com/golang/protobuf/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"

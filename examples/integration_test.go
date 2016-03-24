@@ -15,10 +15,10 @@ import (
 
 	"golang.org/x/net/context"
 
-	gw "github.com/gengo/grpc-gateway/examples/examplepb"
-	server "github.com/gengo/grpc-gateway/examples/server"
-	sub "github.com/gengo/grpc-gateway/examples/sub"
-	"github.com/gengo/grpc-gateway/runtime"
+	gw "github.com/outself/grpc-gateway/examples/examplepb"
+	server "github.com/outself/grpc-gateway/examples/server"
+	sub "github.com/outself/grpc-gateway/examples/sub"
+	"github.com/outself/grpc-gateway/runtime"
 	"github.com/golang/protobuf/proto"
 	"google.golang.org/grpc/codes"
 )

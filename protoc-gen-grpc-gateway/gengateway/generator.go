@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gengo/grpc-gateway/protoc-gen-grpc-gateway/descriptor"
-	gen "github.com/gengo/grpc-gateway/protoc-gen-grpc-gateway/generator"
+	"github.com/outself/grpc-gateway/protoc-gen-grpc-gateway/descriptor"
+	gen "github.com/outself/grpc-gateway/protoc-gen-grpc-gateway/generator"
 	"github.com/golang/glog"
 	"github.com/golang/protobuf/proto"
 	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
@@ -31,8 +31,8 @@ func New(reg *descriptor.Registry) gen.Generator {
 		"encoding/json",
 		"io",
 		"net/http",
-		"github.com/gengo/grpc-gateway/runtime",
-		"github.com/gengo/grpc-gateway/utilities",
+		"github.com/outself/grpc-gateway/runtime",
+		"github.com/outself/grpc-gateway/utilities",
 		"github.com/golang/protobuf/proto",
 		"golang.org/x/net/context",
 		"google.golang.org/grpc",

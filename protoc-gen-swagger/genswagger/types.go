@@ -1,7 +1,7 @@
 package genswagger
 
 import (
-	"github.com/gengo/grpc-gateway/protoc-gen-grpc-gateway/descriptor"
+	"github.com/outself/grpc-gateway/protoc-gen-grpc-gateway/descriptor"
 )
 
 type param struct {
@@ -45,11 +45,12 @@ type swaggerPathItemObject struct {
 
 // http://swagger.io/specification/#operationObject
 type swaggerOperationObject struct {
-	Summary     string                  `json:"summary"`
-	OperationId string                  `json:"operationId"`
-	Responses   swaggerResponsesObject  `json:"responses"`
-	Parameters  swaggerParametersObject `json:"parameters,omitempty"`
-	Tags        []string                `json:"tags,omitempty"`
+	//Summary     string                  `json:"summary"`
+	Description string `json:"description"`
+	//OperationId string                  `json:"operationId"`
+	Responses  swaggerResponsesObject  `json:"responses"`
+	Parameters swaggerParametersObject `json:"parameters,omitempty"`
+	Tags       []string                `json:"tags,omitempty"`
 }
 
 type swaggerParametersObject []swaggerParameterObject

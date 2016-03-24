@@ -1,7 +1,7 @@
 package main
 
 import (
-	examples "github.com/gengo/grpc-gateway/examples/examplepb"
+	examples "github.com/outself/grpc-gateway/examples/examplepb"
 	"github.com/golang/glog"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"

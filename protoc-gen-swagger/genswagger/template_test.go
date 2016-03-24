@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gengo/grpc-gateway/protoc-gen-grpc-gateway/descriptor"
-	"github.com/gengo/grpc-gateway/protoc-gen-grpc-gateway/httprule"
+	"github.com/outself/grpc-gateway/protoc-gen-grpc-gateway/descriptor"
+	"github.com/outself/grpc-gateway/protoc-gen-grpc-gateway/httprule"
 	"github.com/golang/protobuf/proto"
 	protodescriptor "github.com/golang/protobuf/protoc-gen-go/descriptor"
 )

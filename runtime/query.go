@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/gengo/grpc-gateway/utilities"
+	"github.com/outself/grpc-gateway/utilities"
 	"github.com/golang/protobuf/proto"
 	"google.golang.org/grpc/grpclog"
 )
